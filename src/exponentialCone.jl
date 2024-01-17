@@ -1,4 +1,4 @@
-# exponentialCone.jl
+# exponentialCone.jl:
 
 function cone_over_probabilities(joined_prob::Array{Float64}, marginals; solver::AbstractOptimizer = SCSOptimizer())::EMResult
 

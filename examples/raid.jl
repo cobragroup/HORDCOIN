@@ -1,6 +1,6 @@
 # raid.jl: RAID 6 examples
 
-using EntropyMaximisation   
+using EntropyMaximisation
 
 
 function to_bits(x, n)

@@ -1,4 +1,4 @@
-# comparison.jl:
+# comparison.jl: Comparison of methods and solvers
 
 using EntropyMaximisation
 
@@ -17,7 +17,7 @@ function create_distribution(dims::Int, size::Int; examples::Int = 10_000_000)
 
     distribution = distribution ./ sum(distribution);
     return distribution
-end
+end;
 
 for i in 2:4
     println(i)

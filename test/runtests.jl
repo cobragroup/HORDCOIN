@@ -1,7 +1,11 @@
+# test/runtests.jl: Tests for package EntropyMaximisation
+
 using EntropyMaximisation
 using Test
 
 @testset "EntropyMaximisation.jl" begin
+
+    atol = 1e-4
 
     d1 = [0.25 0.25; 0.25 0.25]
     d2 = [0 1; 0 0]
@@ -14,6 +18,7 @@ using Test
         @test distribution_entropy(d3) == 1
         @test_throws DomainError distribution_entropy(d4)
     end
+
     @testset "Permutations of length" begin
         @test permutations_of_length(1, 1) == [(1,)]
 
@@ -25,4 +30,38 @@ using Test
 
         @test permutations_of_length(2, 5) == [(1, 2), (1, 3), (1, 4), (1, 5), (2, 3), (2, 4), (2, 5), (3, 4), (3, 5), (4, 5)]
     end
-end
+
+    methods_an = [Cone(), Ipfp(10), Gradient(10)]
+
+    da = [1/16; 3/16;; 3/16; 1/16;;; 1/16; 3/16;; 3/16; 1/16]
+
+    analytical = 2.811278124459133
+
+    @testset "Method $m analytical solution entropy" for m in methods_an
+        result = maximize_entropy(da, 2, method = m)
+        @test isapprox(result.entropy, analytical; atol)
+    end
+
+    methods_xor = [Cone(), Ipfp(10)]
+
+    dx = [0.25; 0;; 0; 0.25;;; 0; 0.25;; 0.25; 0]
+
+    @testset "Method $m XOR entropy" for m in methods_xor
+        result1 = maximize_entropy(dx, 1, method = m)
+        result2 = maximize_entropy(dx, 2, method = m)
+        result3 = maximize_entropy(dx, 3, method = m)
+        @test isapprox(result1.entropy, 3; atol)
+        @test isapprox(result2.entropy, 3; atol)
+        @test isapprox(result3.entropy, 2; atol)
+    end
+
+    @testset "Method $m XOR connected information" for m in methods_xor
+        result2 = connected_information(dx, 2, method = m)
+        result3 = connected_information(dx, 3, method = m)
+        result_dic = connected_information(dx, [2, 3], method = m)
+        @test isapprox(result2, 0; atol)
+        @test isapprox(result3, 1; atol)
+        @test isapprox(result_dic[2], 0; atol)
+        @test isapprox(result_dic[3], 1; atol)
+    end
+end;

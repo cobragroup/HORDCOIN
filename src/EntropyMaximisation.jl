@@ -1,4 +1,4 @@
-# EntropyMaximisation.jl
+# EntropyMaximisation.jl:
 
 module EntropyMaximisation
 

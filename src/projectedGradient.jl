@@ -1,4 +1,4 @@
-# projectedGradient.jl
+# projectedGradient.jl:
 
 function project_to_constraints(data, joined_prob::Array{Float64}, marginals; solver::AbstractOptimizer)
 
@@ -33,7 +33,8 @@ function project_to_constraints(data, joined_prob::Array{Float64}, marginals; so
 
     optimize!(model)
 
-    any(x -> x < 0, value.(q)) && throw(DomainError("Solver wasn't able to solve least square distance without negative probability"))
+    any(x -> x < 0, value.(q)) && 
+        throw(DomainError("Solver wasn't able to solve least square distance without negative probability"))
     return value.(p)
 end
 
@@ -48,12 +49,15 @@ end
 function descent(data, marginals; iterations = 1000, solver::AbstractOptimizer = SCSOptimizer())
     step = 0.01
     flat = vec(data)
+
     smallest = 1/length(data) * 0.1
     def = -log(smallest) - 1
-    @showprogress for i in 1:iterations
+
+    @showprogress for _ in 1:iterations
         flat += step * partial_der_entropy.(flat; default = def)
         flat[flat .< 0] .= 0
         flat = project_to_constraints(flat, data, marginals; solver = solver)
     end
+
     return EMResult(reshape(flat, size(data)))
 end
