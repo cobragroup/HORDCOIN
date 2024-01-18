@@ -24,7 +24,6 @@ module EntropyMaximisation
     include("utils.jl")
     include("ipfp.jl")
     include("exponentialCone.jl")
-    include("MatlabParser.jl")
     include("projectedGradient.jl")
 
     """
@@ -116,7 +115,7 @@ module EntropyMaximisation
     end
 
     """
-    connected_information(joined_probability::Array{T}, order::Int; method = Cone(MosekOptimizer())) where T <: Real
+    connected_information(joined_probability::Array{T}, order::Int; method = Cone(MosekTools.Optimizer())) where T <: Real
 
     Computes connected information for given joined probability and multiple `orders`. Optional argument `method` 
     specifies which method to use for optimization. Default is `Cone()`. Preffered when computing multiple connected

@@ -38,7 +38,7 @@ maximize_entropy(probability_distribution, marginal_size)
 ```
 Running the code with optional parameter `method`:
 ```julia
-maximize_entropy(probability_distribution, marginal_size; method = Gradient(10, SCSOptimizer()))
+maximize_entropy(probability_distribution, marginal_size; method = Gradient(10, SCS.Optimizer()))
 ```
 
 Second function is the `connected_information` function. It takes as an input the probability distribution and the size of marginal distributions. When computing multiple connected information values for the same probability distribution, it is possible to pass the sizes as an array. This will even speed up the process, because it will reduce the number of computation. Furthermore, method used to compute the maximal entropy can be selected as well.
@@ -51,7 +51,7 @@ connected_information(probability_distribution, [2, 3])
 With optional parameters:
 ```julia
 connected_information(probability_distribution, 2; method = Ipfp(15))
-connected_information(probability_distribution, [2, 3]; method = Cone(MosekOptimizer()))
+connected_information(probability_distribution, [2, 3]; method = Cone(MosekTools.Optimizer()))
 ```
 
 Package also containts two utility functions. `distribution_entropy` computes the information entropy of probability distribution. `permutations_of_length` returns all permutations of given size from elements from 1 to dims. 
@@ -65,7 +65,7 @@ permutations_of_length(3, 4)
 
 ## Recommendations
 
-The most efficient method is the `Cone` method with `MosekOptimizer`. This requires license to use MOSEK solver. Without the license, it is possible to use `SCSOptimizer` instead, but it is less accurate and slower.
+The most efficient method is the `Cone` method with `MosekTools.Optimizer()`. This requires license to use MOSEK solver. Without the license, it is possible to use `SCS.Optimizer()` instead, but it is less accurate and slower.
 
 The method to use without MOSEK license is the `Ipfp`. It is accurate and not the slowest. It can also be parametrized with number of iterations, but it is not necessary. Default value is 10.
 
