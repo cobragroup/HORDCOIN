@@ -10,25 +10,19 @@ Base.show(io::IO, result::EMResult) =
     print(io, "Entropy: ", result.entropy, "\nDistribution:\n", result.joined_probability)
 
 
-abstract type AbstractOptimizer end
-
-struct SCSOptimizer <: AbstractOptimizer end
-struct MosekOptimizer <: AbstractOptimizer end
-
-
 abstract type AbstractMethod end
 
 struct Cone <: AbstractMethod
-    optimizer::AbstractOptimizer
+    optimizer::MathOptInterface.AbstractOptimizer
 end
-Cone() = Cone(SCSOptimizer())
+Cone() = Cone(SCS.Optimizer())
 
 struct Gradient <: AbstractMethod
     iterations::Int
-    optimizer::AbstractOptimizer
+    optimizer::MathOptInterface.AbstractOptimizer
 end
-Gradient() = Gradient(10, SCSOptimizer())
-Gradient(iterations::Int) = Gradient(iterations, SCSOptimizer())
+Gradient() = Gradient(10, SCS.Optimizer())
+Gradient(iterations::Int) = Gradient(iterations, SCS.Optimizer())
 
 struct Ipfp <: AbstractMethod
     iterations::Int

@@ -1,19 +1,20 @@
 # exponentialCone.jl:
 
-function cone_over_probabilities(joined_prob::Array{Float64}, marginals; solver::AbstractOptimizer = SCSOptimizer())::EMResult
+function cone_for_optimizer(joined_prob::Array{Float64}, marginals, optimizer::SCS.Optimizer)::EMResult
+    cone_over_probabilities(joined_prob, marginals; model = Model(typeof(optimizer)))
+end
+
+function cone_for_optimizer(joined_prob::Array{Float64}, marginals, optimizer::MosekTools.Optimizer)::EMResult
+    cone_over_probabilities(joined_prob, marginals; model = Model(typeof(optimizer)))
+end
+
+
+function cone_over_probabilities(joined_prob::Array{Float64}, marginals; model::Model = Model(SCS.Optimizer))::EMResult
 
     # defines the complement of a set of dimension
     ~(s::Tuple) = (i for i = 1:ndims(joined_prob) if i ∉ s)
 
     n = length(joined_prob)
-
-    if solver isa SCSOptimizer
-        model = Model(SCS.Optimizer)
-    elseif solver isa MosekOptimizer
-        model = Model(Mosek.Optimizer)
-    else
-        error("Unknown solver of type $(typeof(solver))")
-    end
     
     set_silent(model)
 

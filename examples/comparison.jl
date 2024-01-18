@@ -2,7 +2,7 @@
 
 using EntropyMaximisation
 
-using Random, BenchmarkTools
+using Random, BenchmarkTools, MosekTools
 
 
 function create_distribution(dims::Int, size::Int; examples::Int = 10_000_000)
@@ -25,7 +25,7 @@ for i in 2:4
     for j in 1:i-1
         println("marginal size ", j)
         println("Cone Mosek")
-        b = @benchmark maximize_entropy($distribution, $j, method = Cone(MosekOptimizer()))
+        b = @benchmark maximize_entropy($distribution, $j, method = Cone(MosekTools.Optimizer()))
         display(b)
         println("Cone SCS")
         b = @benchmark maximize_entropy($distribution, $j, method = Cone())
@@ -48,6 +48,6 @@ distribution = create_distribution(i, 10);
 for j in 1:i-1
     println("marginal size ", j)
     println("Cone Mosek")
-    b = @benchmark maximize_entropy($distribution, $j, method = Cone(MosekOptimizer()))
+    b = @benchmark maximize_entropy($distribution, $j, method = Cone(MosekTools.Optimizer()))
     display(b)
 end

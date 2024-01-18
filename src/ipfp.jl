@@ -2,8 +2,6 @@
 
 function ipfp(joined_prob::Array{Float64}, marginals; iterations = 1)::EMResult
 
-    ~(s::Tuple) = (i for i = 1:ndims(joined_prob) if i ∉ s)
-
     base1 = fill(1/length(joined_prob) , size(joined_prob))
     base2 = fill(1/length(joined_prob) , size(joined_prob)) 
 

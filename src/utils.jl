@@ -2,7 +2,7 @@
 
 function entropy(probability::T) where {T <: Real}
     if probability == 0
-        return 0
+        return zero(T)
     end
     return -probability * log2(probability)
 end
@@ -27,13 +27,14 @@ julia> distribution_entropy([0.25 0.25; 0.25 0.25])
 2.0
 ```
 """
-function distribution_entropy(distribution::Array{T}) where {T <: Real}
-    any(x -> x < 0, distribution) && throw(DomainError("Distribution entropy cannot be computed for negative value"))
-    return sum(entropy.(distribution))
+function distribution_entropy(distribution::Array{<:Real})
+    any(x -> x < 0, distribution) && 
+        throw(DomainError("Distribution entropy cannot be computed for negative value"))
+    return sum(entropy, distribution)
 end
 
 function vecs2tuples(vectors::Array{Vector{T}})::Array{Tuple{Vararg{T}}} where {T}
-    return [Tuple{Vararg{T}}(v) for v in vectors]
+    return [Tuple(v) for v in vectors]
 end
 
 function permutations_of_array(arr::Array{Int}, length::Int)::Vector{Vector{Int}}
@@ -74,7 +75,9 @@ julia> permutations_of_length(1,5)
 ```
 """
 function permutations_of_length(length::Int, dims::Int)::Vector{Tuple}
-    length > dims && throw(DomainError("Length $length cannot be greater than number of dimensions $dims"))
-    length < 1 && throw(DomainError("Length $length has to be possitive"))
+    length > dims && 
+        throw(DomainError("Length $length cannot be greater than number of dimensions $dims"))
+    length < 1 && 
+        throw(DomainError("Length $length has to be possitive"))
     permutations_of_array(collect(1:dims), length) |> vecs2tuples
 end

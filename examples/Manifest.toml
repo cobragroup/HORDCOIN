@@ -137,11 +137,11 @@ version = "0.6.8"
 
 [[deps.EntropyMaximisation]]
 deps = ["JuMP", "MathOptInterface", "Mosek", "MosekTools", "ProgressMeter", "SCS"]
-git-tree-sha1 = "0ce833250d2d9515b00251e1088cf2f4d8a64f3c"
+git-tree-sha1 = "eb33f3dfb3ec903485e63f52f805cdff8e8cadc9"
 repo-rev = "main"
 repo-url = "https://gitlab.com/kislijak/entropy-maximisation.git"
 uuid = "e9d4d5d4-4cae-48c5-8e91-69bea3101049"
-version = "1.0.0-DEV"
+version = "1.0.0"
 
 [[deps.FileWatching]]
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"

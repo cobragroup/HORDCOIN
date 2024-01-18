@@ -14,9 +14,6 @@ module EntropyMaximisation
     export Gradient
     export Ipfp
 
-    export SCSOptimizer
-    export MosekOptimizer
-
     export maximize_entropy
     export connected_information
 
@@ -27,6 +24,7 @@ module EntropyMaximisation
     include("utils.jl")
     include("ipfp.jl")
     include("exponentialCone.jl")
+    include("MatlabParser.jl")
     include("projectedGradient.jl")
 
     """
@@ -55,7 +53,7 @@ module EntropyMaximisation
     [0.25 0.25; 0.25 0.25]
     ```
     """
-    function maximize_entropy(joined_probability::Array{T}, marginal_size; method = Cone())::EMResult where T <: Real 
+    function maximize_entropy(joined_probability::Array{<:Real}, marginal_size; method = Cone())::EMResult
 
         marginal_size > ndims(joined_probability) && 
             throw(DomainError("Marginal size cannot be greater than number of dimensions of joined probability"))
@@ -70,16 +68,21 @@ module EntropyMaximisation
 
         marginals = permutations_of_length(marginal_size, ndims(joined_probability))
 
-        if method isa Cone
-            return cone_over_probabilities(joined_probability, marginals; solver = method.optimizer)
-        elseif method isa Gradient
-            return descent(joined_probability, marginals, iterations = method.iterations; solver = method.optimizer)
-        elseif method isa Ipfp
-            return ipfp(joined_probability, marginals, iterations = method.iterations)
-        else
-            error("Unknown method of type $(typeof(method))")
-        end
+        return maximize_method(joined_probability, marginals, method)
     end
+
+    function maximize_method(joined_probability::Array{<:Real}, marginals, method::Cone)
+        cone_for_optimizer(joined_probability, marginals, method.optimizer)
+    end
+
+    function maximize_method(joined_probability::Array{<:Real}, marginals, method::Gradient)
+        descent(joined_probability, marginals; iterations = method.iterations, optimizer = method.optimizer)
+    end
+
+    function maximize_method(joined_probability::Array{<:Real}, marginals, method::Ipfp)
+        ipfp(joined_probability, marginals, iterations = method.iterations)
+    end
+
 
     """
     connected_information(joined_probability::Array{T}, order::Int; method = Cone(MosekOptimizer())) where T <: Real
@@ -100,7 +103,7 @@ module EntropyMaximisation
     0.2780719051126377
     ```
     """
-    function connected_information(joined_probability::Array{T}, order::Int; method = Cone(MosekOptimizer())) where T <: Real
+    function connected_information(joined_probability::Array{T}, order::Int; method = Cone(MosekTools.Optimizer())) where T <: Real
 
         order > ndims(joined_probability) && 
             throw(DomainError("Marginal size cannot be greater than number of dimensions of joined probability"))
@@ -138,7 +141,7 @@ module EntropyMaximisation
       3 => 1.0
     ```
     """
-    function connected_information(joined_probability::Array{T}, orders::Vector{Int}; method = Cone(MosekOptimizer())) where T <: Real
+    function connected_information(joined_probability::Array{T}, orders::Vector{Int}; method = Cone(MosekTools.Optimizer())) where T <: Real
 
         sort!(orders)
 

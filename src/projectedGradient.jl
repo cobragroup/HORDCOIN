@@ -1,19 +1,11 @@
 # projectedGradient.jl:
 
-function project_to_constraints(data, joined_prob::Array{Float64}, marginals; solver::AbstractOptimizer)
+function project_to_constraints(data, joined_prob::Array{Float64}, marginals; model::Model = Model(SCS.Optimizer))::Array{Float64}
 
     # defines the complement of a set of dimension
     ~(s::Tuple) = (i for i = 1:ndims(joined_prob) if i ∉ s)
 
     n = length(joined_prob)
-
-    if solver isa SCSOptimizer
-        model = Model(SCS.Optimizer)
-    elseif solver isa MosekOptimizer
-        model = Model(Mosek.Optimizer)
-    else
-        error("Unknown solver of type $(typeof(solver))")
-    end
     
     set_silent(model)
 
@@ -38,15 +30,25 @@ function project_to_constraints(data, joined_prob::Array{Float64}, marginals; so
     return value.(p)
 end
 
-function partial_der_entropy(x; default = 10)
+function project_with_model(data, joined_prob::Array{Float64}, marginals, optimizer::SCS.Optimizer)::Array{Float64}
+    project_to_constraints(data, joined_prob, marginals; model = Model(typeof(optimizer)))
+end
+
+function project_with_model(data, joined_prob::Array{Float64}, marginals, optimizer::MosekTools.Optimizer)::Array{Float64}
+    project_to_constraints(data, joined_prob, marginals; model = Model(typeof(optimizer)))
+end
+
+
+
+function partial_der_entropy(x::T; default = 10) where {T <: Real}
     if x <= 0
         # default value is important due to the derivative of entropy not being defined at 0
-        return default
+        return convert(T, default)
     end
     return (- log(x) - 1)
 end
 
-function descent(data, marginals; iterations = 1000, solver::AbstractOptimizer = SCSOptimizer())
+function descent(data, marginals; iterations = 1000, optimizer::MathOptInterface.AbstractOptimizer)::EMResult
     step = 0.01
     flat = vec(data)
 
@@ -56,7 +58,7 @@ function descent(data, marginals; iterations = 1000, solver::AbstractOptimizer =
     @showprogress for _ in 1:iterations
         flat += step * partial_der_entropy.(flat; default = def)
         flat[flat .< 0] .= 0
-        flat = project_to_constraints(flat, data, marginals; solver = solver)
+        flat = project_with_model(flat, data, marginals, optimizer)
     end
 
     return EMResult(reshape(flat, size(data)))

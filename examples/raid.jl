@@ -2,6 +2,8 @@
 
 using EntropyMaximisation
 
+using MosekTools
+
 
 function to_bits(x, n)
     Vector([(x÷(2^y))%2 for y in (n-1):-1:0])
@@ -61,11 +63,11 @@ end
 distribution = distribution ./ sum(distribution);
 
 
-maximize_entropy(distribution, 1, method = Cone(MosekOptimizer()))
-maximize_entropy(distribution, 2, method = Cone(MosekOptimizer()))
-maximize_entropy(distribution, 3, method = Cone(MosekOptimizer()))
-maximize_entropy(distribution, 4, method = Cone(MosekOptimizer()))
-maximize_entropy(distribution, 5, method = Cone(MosekOptimizer()))
+maximize_entropy(distribution, 1, method = Cone(MosekTools.Optimizer()))
+maximize_entropy(distribution, 2, method = Cone(MosekTools.Optimizer()))
+maximize_entropy(distribution, 3, method = Cone(MosekTools.Optimizer()))
+maximize_entropy(distribution, 4, method = Cone(MosekTools.Optimizer()))
+maximize_entropy(distribution, 5, method = Cone(MosekTools.Optimizer()))
 
 connected_information(distribution, [2, 3, 4, 5])
 
