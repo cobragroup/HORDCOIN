@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/B0B36JUL-FinalProjects-2023/Projekt_Kislinger/blob/main/LICENSE)
 
-EntropyMaximisation provides methods for finding probability distribution with maximal Shannon entropy with marginal distribution or entropic constraints (according to different size of marginal distributions), and therefore to compute the connected information. Package implements various methods of sation. Furthermore, it provides utilities to work with probability distributions.
+EntropyMaximisation provides methods for finding probability distribution with maximal Shannon entropy with marginal distribution or entropic constraints (according to different size of marginal distributions), and therefore to compute the connected information. Package implements various methods of optimisation. Furthermore, it provides utilities to work with probability distributions.
 
 This project was created as a part of the semestral project "Maximization of Shannon entropy under marginal constraints" and bachelor's thesis "Connected Information from Given Entropies" at the Faculty of Electrical Engineering, Czech Technical University in Prague. Further information about the problem can be found there.
 
@@ -32,7 +32,7 @@ The package considers following:
 
 The main function is the `maximise_entropy` function. It takes as an input the probability distribution and the size of marginal distributions. Optional parameter is the method of optimisation, which can have further specified parameters (like number of iterations, etc.). The function returns the probability distribution with maximal entropy in the form of type `EMResult`.
 
-The main function for optimising with entropic constraints is the function `max_ent_fixed_ent`. It takes as an input a distribution (not a probability distribution), and using selected method computes and marginal order computes the maximal entropy.
+The main function for optimising with entropic constraints is the function `max_ent_fixed_ent`. It takes as an input a distribution (not a probability distribution), and using selected method computes and marginal order computes the maximal entropy. It can be supplemented with precomputed entropies to speed up the process and to avoid recomputing the entropies.
 
 Basic usage of the function is the following:
 ```julia
@@ -77,4 +77,4 @@ The method to use without MOSEK license is the `Ipfp`. It is accurate and not th
 
 The `Gradient` method is the slowest and may fail during the execution due to limitations of Second Order Cone constraints in solvers.
 
-When computing with fixed entropies, the reccomended method is the `NsbPolymatroid` method with `MosekTools.Optimizer()`. More information can be found in the bachelor's thesis mentioned in the beginning.
+When computing with fixed entropies and small amount of samples, the recomended method is the `NsbPolymatroid` with `MosekTools.Optimizer()`. When the distribution consist of enough samples or short computation time is required, use `RawPolymatroid` with estimating entropy from empirical distribution. More information can be found in the bachelor's thesis mentioned in the beginning.
