@@ -67,54 +67,54 @@ resource_path = abspath("EntropyMaximisation/resources/")
 # Precomputing entropies, takes more than 1 hour
 # DON'T RUN
 
-ent_nsb_fpn_2 = precompute_entropies(un_fpn_2)
-ent_nsb_fpn_3 = precompute_entropies(un_fpn_3)
-ent_nsb_fpn_4 = precompute_entropies(un_fpn_4)
-ent_nsb_fpn_5 = precompute_entropies(un_fpn_5)
+ent_G_fpn_2 = precompute_entropies(un_fpn_2)
+ent_G_fpn_3 = precompute_entropies(un_fpn_3)
+ent_G_fpn_4 = precompute_entropies(un_fpn_4)
+ent_G_fpn_5 = precompute_entropies(un_fpn_5)
 
-ent_nsb_dmn_2 = precompute_entropies(un_dmn_2)
-ent_nsb_dmn_3 = precompute_entropies(un_dmn_3)
-ent_nsb_dmn_4 = precompute_entropies(un_dmn_4)
-ent_nsb_dmn_5 = precompute_entropies(un_dmn_5)
+ent_G_dmn_2 = precompute_entropies(un_dmn_2)
+ent_G_dmn_3 = precompute_entropies(un_dmn_3)
+ent_G_dmn_4 = precompute_entropies(un_dmn_4)
+ent_G_dmn_5 = precompute_entropies(un_dmn_5)
 
 
-serialize(resource_path * "ent_nsb_fpn_2.dat", ent_nsb_fpn_2)
-serialize(resource_path * "ent_nsb_fpn_3.dat", ent_nsb_fpn_3)
-serialize(resource_path * "ent_nsb_fpn_4.dat", ent_nsb_fpn_4)
-serialize(resource_path * "ent_nsb_fpn_5.dat", ent_nsb_fpn_5)
+serialize(resource_path * "ent_G_fpn_2.dat", ent_G_fpn_2)
+serialize(resource_path * "ent_G_fpn_3.dat", ent_G_fpn_3)
+serialize(resource_path * "ent_G_fpn_4.dat", ent_G_fpn_4)
+serialize(resource_path * "ent_G_fpn_5.dat", ent_G_fpn_5)
 
-serialize(resource_path * "ent_nsb_dmn_2.dat", ent_nsb_dmn_2)
-serialize(resource_path * "ent_nsb_dmn_3.dat", ent_nsb_dmn_3)
-serialize(resource_path * "ent_nsb_dmn_4.dat", ent_nsb_dmn_4)
-serialize(resource_path * "ent_nsb_dmn_5.dat", ent_nsb_dmn_5)
+serialize(resource_path * "ent_G_dmn_2.dat", ent_G_dmn_2)
+serialize(resource_path * "ent_G_dmn_3.dat", ent_G_dmn_3)
+serialize(resource_path * "ent_G_dmn_4.dat", ent_G_dmn_4)
+serialize(resource_path * "ent_G_dmn_5.dat", ent_G_dmn_5)
 
 
 # Loading precomputed entropies
 
-ent_nsb_fpn_2 = deserialize(resource_path * "ent_nsb_fpn_2.dat")
-ent_nsb_fpn_3 = deserialize(resource_path * "ent_nsb_fpn_3.dat")
-ent_nsb_fpn_4 = deserialize(resource_path * "ent_nsb_fpn_4.dat")
-ent_nsb_fpn_5 = deserialize(resource_path * "ent_nsb_fpn_5.dat")
+ent_G_fpn_2 = deserialize(resource_path * "ent_G_fpn_2.dat")
+ent_G_fpn_3 = deserialize(resource_path * "ent_G_fpn_3.dat")
+ent_G_fpn_4 = deserialize(resource_path * "ent_G_fpn_4.dat")
+ent_G_fpn_5 = deserialize(resource_path * "ent_G_fpn_5.dat")
 
-ent_nsb_dmn_2 = deserialize(resource_path * "ent_nsb_dmn_2.dat")
-ent_nsb_dmn_3 = deserialize(resource_path * "ent_nsb_dmn_3.dat")
-ent_nsb_dmn_4 = deserialize(resource_path * "ent_nsb_dmn_4.dat")
-ent_nsb_dmn_5 = deserialize(resource_path * "ent_nsb_dmn_5.dat")
+ent_G_dmn_2 = deserialize(resource_path * "ent_G_dmn_2.dat")
+ent_G_dmn_3 = deserialize(resource_path * "ent_G_dmn_3.dat")
+ent_G_dmn_4 = deserialize(resource_path * "ent_G_dmn_4.dat")
+ent_G_dmn_5 = deserialize(resource_path * "ent_G_dmn_5.dat")
 
-method = NsbPolymatroid(false, Mosek.Optimizer(), 0.01)
+method = GPolymatroid(false, Mosek.Optimizer(), 0.01)
 
-# Calculating connected information (ci_nsb_...) and maximal entropies with fixed marginal entropies (max_nsb_...)
-# using NSB estimator for entropy estimating
+# Calculating connected information (ci_G_...) and maximal entropies with fixed marginal entropies (max_G_...)
+# using Grassberger estimator for entropy estimating
 
-ci_nsb_fpn_2, max_nsb_fpn_2 = connected_information(un_fpn_2, collect(2:10); method, precalculated_entropies = ent_nsb_fpn_2)
-ci_nsb_fpn_3, max_nsb_fpn_3 = connected_information(un_fpn_3, collect(2:10); method, precalculated_entropies = ent_nsb_fpn_3)
-ci_nsb_fpn_4, max_nsb_fpn_4 = connected_information(un_fpn_4, collect(2:10); method, precalculated_entropies = ent_nsb_fpn_4)
-ci_nsb_fpn_5, max_nsb_fpn_5 = connected_information(un_fpn_5, collect(2:10); method, precalculated_entropies = ent_nsb_fpn_5)
+ci_G_fpn_2, max_G_fpn_2 = connected_information(un_fpn_2, collect(2:10); method, precalculated_entropies = ent_G_fpn_2)
+ci_G_fpn_3, max_G_fpn_3 = connected_information(un_fpn_3, collect(2:10); method, precalculated_entropies = ent_G_fpn_3)
+ci_G_fpn_4, max_G_fpn_4 = connected_information(un_fpn_4, collect(2:10); method, precalculated_entropies = ent_G_fpn_4)
+ci_G_fpn_5, max_G_fpn_5 = connected_information(un_fpn_5, collect(2:10); method, precalculated_entropies = ent_G_fpn_5)
 
-ci_nsb_dmn_2, max_nsb_dmn_2 = connected_information(un_dmn_2, collect(2:10); method, precalculated_entropies = ent_nsb_dmn_2)
-ci_nsb_dmn_3, max_nsb_dmn_3 = connected_information(un_dmn_3, collect(2:10); method, precalculated_entropies = ent_nsb_dmn_3)
-ci_nsb_dmn_4, max_nsb_dmn_4 = connected_information(un_dmn_4, collect(2:10); method, precalculated_entropies = ent_nsb_dmn_4)
-ci_nsb_dmn_5, max_nsb_dmn_5 = connected_information(un_dmn_5, collect(2:10); method, precalculated_entropies = ent_nsb_dmn_5)
+ci_G_dmn_2, max_G_dmn_2 = connected_information(un_dmn_2, collect(2:10); method, precalculated_entropies = ent_G_dmn_2)
+ci_G_dmn_3, max_G_dmn_3 = connected_information(un_dmn_3, collect(2:10); method, precalculated_entropies = ent_G_dmn_3)
+ci_G_dmn_4, max_G_dmn_4 = connected_information(un_dmn_4, collect(2:10); method, precalculated_entropies = ent_G_dmn_4)
+ci_G_dmn_5, max_G_dmn_5 = connected_information(un_dmn_5, collect(2:10); method, precalculated_entropies = ent_G_dmn_5)
 
 
 # Total correlation
@@ -123,15 +123,15 @@ function normalise_and_sort_dict(dictionary)
 	return sort(collect(map(x -> (x[1] => round(x[2] ./ sum(values(dictionary)), digits = 3)), collect(dictionary))), by = x -> x[1])
 end
 
-tc_nsb_fpn_2 = normalise_and_sort_dict(ci_nsb_fpn_2)
-tc_nsb_fpn_3 = normalise_and_sort_dict(ci_nsb_fpn_3)
-tc_nsb_fpn_4 = normalise_and_sort_dict(ci_nsb_fpn_4)
-tc_nsb_fpn_5 = normalise_and_sort_dict(ci_nsb_fpn_5)
+tc_G_fpn_2 = normalise_and_sort_dict(ci_G_fpn_2)
+tc_G_fpn_3 = normalise_and_sort_dict(ci_G_fpn_3)
+tc_G_fpn_4 = normalise_and_sort_dict(ci_G_fpn_4)
+tc_G_fpn_5 = normalise_and_sort_dict(ci_G_fpn_5)
 
-tc_nsb_dmn_2 = normalise_and_sort_dict(ci_nsb_dmn_2)
-tc_nsb_dmn_3 = normalise_and_sort_dict(ci_nsb_dmn_3)
-tc_nsb_dmn_4 = normalise_and_sort_dict(ci_nsb_dmn_4)
-tc_nsb_dmn_5 = normalise_and_sort_dict(ci_nsb_dmn_5)
+tc_G_dmn_2 = normalise_and_sort_dict(ci_G_dmn_2)
+tc_G_dmn_3 = normalise_and_sort_dict(ci_G_dmn_3)
+tc_G_dmn_4 = normalise_and_sort_dict(ci_G_dmn_4)
+tc_G_dmn_5 = normalise_and_sort_dict(ci_G_dmn_5)
 
 tc_raw_fpn_2 = normalise_and_sort_dict(ci_raw_fpn_2)
 tc_raw_fpn_3 = normalise_and_sort_dict(ci_raw_fpn_3)
@@ -150,20 +150,20 @@ function join_dicts(dicts...)
 	return transpose(hcat(collect.(sort([(k, [d[k] for d in dicts]...) for k in keys(dicts[1])], by = x -> x[1]))...))
 end
 
-tc_nsb_fpn = join_dicts(Dict(tc_nsb_fpn_2), Dict(tc_nsb_fpn_3), Dict(tc_nsb_fpn_4), Dict(tc_nsb_fpn_5))
-tc_nsb_dmn = join_dicts(Dict(tc_nsb_dmn_2), Dict(tc_nsb_dmn_3), Dict(tc_nsb_dmn_4), Dict(tc_nsb_dmn_5))
+tc_G_fpn = join_dicts(Dict(tc_G_fpn_2), Dict(tc_G_fpn_3), Dict(tc_G_fpn_4), Dict(tc_G_fpn_5))
+tc_G_dmn = join_dicts(Dict(tc_G_dmn_2), Dict(tc_G_dmn_3), Dict(tc_G_dmn_4), Dict(tc_G_dmn_5))
 
 tc_raw_fpn = join_dicts(Dict(tc_raw_fpn_2), Dict(tc_raw_fpn_3), Dict(tc_raw_fpn_4), Dict(tc_raw_fpn_5))
 tc_raw_dmn = join_dicts(Dict(tc_raw_dmn_2), Dict(tc_raw_dmn_3), Dict(tc_raw_dmn_4), Dict(tc_raw_dmn_5))
 
-fpn_table = join_dicts(Dict(tc_nsb_fpn_2), Dict(tc_raw_fpn_2), Dict(tc_nsb_fpn_3), Dict(tc_raw_fpn_3), Dict(tc_nsb_fpn_4), Dict(tc_raw_fpn_4), Dict(tc_nsb_fpn_5), Dict(tc_raw_fpn_5))
-dmn_table = join_dicts(Dict(tc_nsb_dmn_2), Dict(tc_raw_dmn_2), Dict(tc_nsb_dmn_3), Dict(tc_raw_dmn_3), Dict(tc_nsb_dmn_4), Dict(tc_raw_dmn_4), Dict(tc_nsb_dmn_5), Dict(tc_raw_dmn_5))
+fpn_table = join_dicts(Dict(tc_G_fpn_2), Dict(tc_raw_fpn_2), Dict(tc_G_fpn_3), Dict(tc_raw_fpn_3), Dict(tc_G_fpn_4), Dict(tc_raw_fpn_4), Dict(tc_G_fpn_5), Dict(tc_raw_fpn_5))
+dmn_table = join_dicts(Dict(tc_G_dmn_2), Dict(tc_raw_dmn_2), Dict(tc_G_dmn_3), Dict(tc_raw_dmn_3), Dict(tc_G_dmn_4), Dict(tc_raw_dmn_4), Dict(tc_G_dmn_5), Dict(tc_raw_dmn_5))
 
 # Final tables with results
 using PrettyTables
 
-pretty_table(tc_nsb_fpn, sortkeys = true)
-pretty_table(tc_nsb_dmn, sortkeys = true)
+pretty_table(tc_G_fpn, sortkeys = true)
+pretty_table(tc_G_dmn, sortkeys = true)
 pretty_table(tc_raw_fpn, sortkeys = true)
 pretty_table(tc_raw_dmn, sortkeys = true)
 
@@ -172,8 +172,8 @@ pretty_table(dmn_table, sortkeys = true)
 
 # LaTeX tables
 
-pretty_table(tc_nsb_fpn, sortkeys = true, backend = Val(:latex))
-pretty_table(tc_nsb_dmn, sortkeys = true, backend = Val(:latex))
+pretty_table(tc_G_fpn, sortkeys = true, backend = Val(:latex))
+pretty_table(tc_G_dmn, sortkeys = true, backend = Val(:latex))
 pretty_table(tc_raw_fpn, sortkeys = true, backend = Val(:latex))
 pretty_table(tc_raw_dmn, sortkeys = true, backend = Val(:latex))
 

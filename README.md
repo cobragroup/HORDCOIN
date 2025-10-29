@@ -76,7 +76,7 @@ Without a MOSEK license, use the `Ipfp` method. It is accurate and not the slowe
 
 The `Gradient` method is the slowest and may fail during execution due to limitations of Second Order Cone constraints in solvers.
 
-When computing with fixed entropies and a small number of samples, the recommended method is the `NsbPolymatroid` with `MosekTools.Optimizer()`. When the distribution is sampled enough, you can use `RawPolymatroid` to estimate the entropy with the plug-in estimator. More information can be found in the paper.
+When computing with fixed entropies and a small number of samples, the recommended method is the `GPolymatroid` with `MosekTools.Optimizer()`. When the distribution is sampled enough, you can use `RawPolymatroid` to estimate the entropy with the plug-in estimator. More information can be found in the paper.
 
 ## How to cite
 
