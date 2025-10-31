@@ -120,3 +120,4 @@ end
 
 GPolymatroid() = GPolymatroid(false, SCS.Optimizer(), 0)
 GPolymatroid(zhang_yeung::Bool) = GPolymatroid(zhang_yeung, SCS.Optimizer(), 0)
+GPolymatroid(tolerance::Float64) = GPolymatroid(false, SCS.Optimizer(), tolerance)

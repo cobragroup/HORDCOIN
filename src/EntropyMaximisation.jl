@@ -122,7 +122,7 @@ end
 
 
 """
-	connected_information(joined_probability::Array{<:Real}, order::Int, method::AbstractMarginalMethod = Cone(Ipfp.Optimizer())) -> Float64
+	connected_information(joined_probability::Array{<:Real}, order::Int, method::AbstractMarginalMethod = Ipfp()) -> Float64
 
 Compute **connected information** (a.k.a. multi-information of order `order`) for the given joint distribution.
 
@@ -137,7 +137,7 @@ I_order = H^*(order-1) - H^*(order)
 - `order::Int`: Interaction order (must satisfy `2 ≤ order ≤ ndims(joined_probability)`).
 
 # Keywords
-- `method::AbstractMarginalMethod = Cone(Ipfp.Optimizer())`: Optimisation strategy used inside the two `maximise_entropy` calls.
+- `method::AbstractMarginalMethod = Ipfp()`: Optimisation strategy used inside the two `maximise_entropy` calls.
 
 # Returns
 - `Float64`: Connected information of the requested order.
@@ -157,15 +157,15 @@ Progress: 100%|█████████████████████�
 0.2780719051126377
 ```
 """
-function connected_information(joined_probability::Array{T}, order::Int, method::AbstractMarginalMethod = Cone(Ipfp.Optimizer()))::Float64 where T <: Real
+function connected_information(joined_probability::Array{T}, order::Int, method::AbstractMarginalMethod = Ipfp())::Float64 where T <: Real
 
 	order > ndims(joined_probability) &&
 		throw(DomainError("Marginal size cannot be greater than number of dimensions of joined probability"))
 	order < 2 &&
 		throw(DomainError("Marginal size for connected information cannot be less than 2"))
 
-	entropy1 = maximise_entropy(joined_probability, order - 1, method).entropy
-	entropy2 = maximise_entropy(joined_probability, order, method).entropy
+	entropy1 = maximise_entropy(joined_probability, order - 1; method).entropy
+	entropy2 = maximise_entropy(joined_probability, order; method).entropy
 	return entropy1 - entropy2
 end
 
@@ -173,7 +173,7 @@ function connected_information(joined_probability::Array{Int}, order::Int, metho
 	connected_information(joined_probability ./ sum(joined_probability), order, method)
 end
 """
-	connected_information(joined_probability::Array{<:Real}, orders::Vector{Int}, method = Cone(Ipfp.Optimizer())) -> Dict{Int,Float64}
+	connected_information(joined_probability::Array{<:Real}, orders::Vector{Int}, method = Ipfp()) -> Dict{Int,Float64}
 
 Compute connected information for **multiple orders** efficiently.
 
@@ -184,7 +184,7 @@ This method computes the set of entropies needed for all `orders` in a single pa
 - `orders::Vector{Int}`: Interaction orders to evaluate. Values must satisfy `2 ≤ orders[i] ≤ ndims(joined_probability)`.
 
 # Keywords
-- `method = Cone(Ipfp.Optimizer())`: Optimisation strategy used inside repeated `maximise_entropy` calls.
+- `method = Ipfp()`: Optimisation strategy used inside repeated `maximise_entropy` calls.
 
 # Returns
 - `Dict{Int,Float64}`: Mapping `m => I_m` with `I_m = H^(m-1) - H^m`.
@@ -210,7 +210,7 @@ Dict{Int64, Float64} with 2 entries:
   3 => 1.0
 ```
 """
-function connected_information(joined_probability::Array{T}, orders::Vector{Int}, method::AbstractMarginalMethod = Cone(Ipfp.Optimizer())) where T <: Real
+function connected_information(joined_probability::Array{T}, orders::Vector{Int}, method::AbstractMarginalMethod = Ipfp()) where T <: Real
 
 	sort!(orders)
 
@@ -429,6 +429,7 @@ function _max_entropy_unnormalized_for_set(unnormalized_distribution::Array{<:In
 			method.mle_correction = (length(unnormalized_distribution) - 1) / (2 * sum(unnormalized_distribution))
 		end
 	end
+
 	ent = precalculated_entropies
 	si = Dict()
 	result = Dict{Int, Float64}()
@@ -515,13 +516,14 @@ function _max_entropy_normalized_for_set(normalized_distribution::Array{<:T}, ma
 	method.joined_probability = normalized_distribution
 	method.mle_correction = 0
 
+	dims = ntuple(i -> 0, ndims(normalized_distribution))
 	ent = precalculated_entropies
 	si = Dict()
 	result = Dict{Int, Float64}()
 	for m in marginal_size
 		val, h, ent, si = polymatroid_most_gen(
 			method,
-			Array{Int}(undef, 0, 0),
+			Array{Int}(undef, dims...),
 			m;
 			precalculated_entropies = ent,
 			set_to_index = si,
