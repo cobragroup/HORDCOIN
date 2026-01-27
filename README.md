@@ -1,6 +1,6 @@
 # EntropyMaximisation.jl
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/B0B36JUL-FinalProjects-2023/Projekt_Kislinger/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/cobragroup/EntropyMaximisation/blob/develop/LICENSE)
 
 EntropyMaximisation provides methods for finding probability distributions with maximal Shannon entropy given a fixed marginal distribution or entropy up to a chosen order, and to compute the Connected Information. The package allows the selection of different optimisers.
 
