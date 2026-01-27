@@ -1,4 +1,4 @@
-using EntropyMaximisation
+using HORDCOIN
 using SCS
 
 # This is a simplified version of the code used in the paper. 
@@ -34,7 +34,7 @@ end
 function Ncounter(sequence, N)
 	tmp = []
 	for i in 1:N
-		tot = N*div(length(sequence)-i+1, N)
+		tot = N * div(length(sequence) - i + 1, N)
 		push!(tmp, reshape(sequence[i:((tot+i)-1)], (div(tot, N), N)))
 	end
 	a = vcat(tmp...)

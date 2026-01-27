@@ -182,10 +182,10 @@ deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 version = "1.7.0"
 
-[[deps.EntropyMaximisation]]
+[[deps.HORDCOIN]]
 deps = ["CDDLib", "Combinatorics", "Ipopt", "JuMP", "MAT", "MadNLP", "MathOptInterface", "Mosek", "MosekTools", "Polyhedra", "ProgressMeter", "SCS", "Statistics"]
 path = ".."
-uuid = "e9d4d5d4-4cae-48c5-8e91-69bea3101049"
+uuid = "5495aede-444c-4b33-a3d8-b01a3ffd757a"
 version = "1.1.0"
 
 [[deps.ExprTools]]
